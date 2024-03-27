@@ -42,7 +42,7 @@ pipeline {
             steps {
                 echo 'Deploying and cleaning'
                 sh 'docker image pull daonq141/shop-management:v1'
-                sh 'docker container stop khalid-springboot || echo "this container does not exist" '
+                sh 'docker container stop shop-management || echo "this container does not exist" '
                 sh 'docker network create dev || echo "this network exists"'
                 sh 'echo y | docker container prune '
 
