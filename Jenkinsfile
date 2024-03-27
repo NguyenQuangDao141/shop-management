@@ -31,6 +31,7 @@ pipeline {
         stage('Deploy MySQL to DEV') {
             steps {
                 echo 'Deploying and cleaning'
+                sh 'docker compose -f docker/mysql/mysql-docker-compose.yml down'
                 sh 'docker compose -f docker/mysql/mysql-docker-compose.yml up -d'
                 sh 'sleep 20'
                 sh "docker exec -i khalid-mysql mysql --user=root --password=${MYSQL_ROOT_LOGIN_PSW} < docker/mysql/script"

@@ -1,0 +1,4 @@
+ALTER USER 'shoppingcart'@'%' IDENTIFIED WITH mysql_native_password BY 'shopping';
+CREATE DATABASE IF NOT EXISTS shopping_cart_db;
+GRANT ALL PRIVILEGES ON *.* TO 'shoppingcart'@'%';
+FLUSH PRIVILEGES;
