@@ -7,6 +7,7 @@ pipeline {
     }
     environment {
         MYSQL_USER_LOGIN = credentials('mysql-user-login')
+        DOCKERHUB_LOGIN = credentials('dockerhub')
     }
     stages {
 
@@ -17,28 +18,24 @@ pipeline {
                 sh 'mvn clean package -Dmaven.test.failure.ignore=true'
             }
         }
-
-        stage('Packaging/Pushing imagae') {
-
+        stage('Build image '){
+            steps{
+                sh 'docker build -t daonq141/shop-management:v1 .'
+            }
+        }
+        stage('Login to dockerhub'){
+            steps{
+                sh('echo $DOCKERHUB_LOGIN_PSW | docker login -u $DOCKERHUB_LOGIN_USR --password-stdin')
+            }
+        }
+        stage('Pushing image') {
             steps {
-                withDockerRegistry(credentialsId: 'dockerhub', url: 'https://index.docker.io/v1/') {
-                    sh 'docker build -t daonq141/shop-management:v1 .'
-                    sh 'docker push daonq141/shop-management:v1'
-                }
+                sh 'docker push daonq141/shop-management:v1'
             }
         }
 
-        stage('Deploy MySQL to DEV') {
-            steps {
-                echo 'Deploying and cleaning'
-                sh 'docker compose -f docker/mysql/mysql-docker-compose.yml down'
-                sh 'docker compose -f docker/mysql/mysql-docker-compose.yml up -d'
-                sh 'sleep 20'
-                sh "docker exec -i khalid-mysql mysql --user=root --password=${MYSQL_USER_LOGIN_PSW} < docker/mysql/script"
-            }
-        }
 
-        stage('Deploy Spring Boot to DEV') {
+        stage('Deploy Application to DEV') {
             steps {
                 echo 'Deploying and cleaning'
                 sh 'docker image pull daonq141/shop-management:v1'
