@@ -20,17 +20,17 @@ pipeline {
         }
         stage('Build image '){
             steps{
-                sh 'docker build -t daonq141/shop-management:v1 .'
+                sh 'sudo docker build -t daonq141/shop-management:v1 .'
             }
         }
         stage('Login to dockerhub'){
             steps{
-                sh('echo $DOCKERHUB_LOGIN_PSW | docker login -u $DOCKERHUB_LOGIN_USR --password-stdin')
+                sh('echo $DOCKERHUB_LOGIN_PSW | sudo docker login -u $DOCKERHUB_LOGIN_USR --password-stdin')
             }
         }
         stage('Pushing image') {
             steps {
-                sh 'docker push daonq141/shop-management:v1'
+                sh 'sudo docker push daonq141/shop-management:v1'
             }
         }
 
@@ -38,12 +38,12 @@ pipeline {
         stage('Deploy Application to DEV') {
             steps {
                 echo 'Deploying and cleaning'
-                sh 'docker image pull daonq141/shop-management:v1'
-                sh 'docker container stop shop-management || echo "this container does not exist" '
-                sh 'docker network create dev || echo "this network exists"'
-                sh 'echo y | docker container prune '
+                sh 'sudo docker image pull daonq141/shop-management:v1'
+                sh 'sudo docker container stop shop-management || echo "this container does not exist" '
+                sh 'sudo docker network create dev || echo "this network exists"'
+                sh 'echo y | sudo docker container prune '
 
-                sh 'docker container run -d --rm --name shop-management -p 8081:8080 --network dev daonq141/shop-management:v1'
+                sh 'sudo docker container run -d --rm --name shop-management -p 8081:8080 --network dev daonq141/shop-management:v1'
             }
         }
 
