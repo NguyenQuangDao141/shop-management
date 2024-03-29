@@ -17,21 +17,25 @@ pipeline {
                 sh 'java -version'
                 sh 'mvn clean package -Dmaven.test.failure.ignore=true'
             }
+            failFast = true
         }
         stage('Build Docker Image '){
             steps{
                 sh 'docker build -t daonq141/shop-management:latest .'
             }
+            failFast = true
         }
         stage('Login to Dockerhub'){
             steps{
                 sh('echo $DOCKERHUB_LOGIN_PSW | docker login -u $DOCKERHUB_LOGIN_USR --password-stdin')
             }
+            failFast = true
         }
         stage('Pushing image') {
             steps {
                 sh 'docker push daonq141/shop-management:latest'
             }
+            failFast = true
         }
 
 
@@ -44,6 +48,26 @@ pipeline {
                 sh ' y |  docker container prune '
                 sh ' docker container run -d --rm --name shop-management -p 8081:8080 --network dev daonq141/shop-management'
             }
+            failFast = true
+        }
+
+        stage('Deploy Application to PRODUCT'){
+            agent{
+                    docker {
+                        image 'khaliddinh/ansible'
+                    }
+                }
+            steps {
+                withCredentials([file(credentialsId: 'ansible_key', variable: 'ansible_key')]) {
+                    sh 'ls -la'
+                    sh "cp /$ansible_key ansible_key"
+                    sh 'cat ansible_key'
+                    sh 'ansible --version'
+                    sh 'ls -la'
+                    sh 'chmod 400 ansible_key '
+                    sh 'ansible-playbook -i hosts --private-key ansible_key playbook.yml'
+            }
+            failFast = true
         }
 
     }
