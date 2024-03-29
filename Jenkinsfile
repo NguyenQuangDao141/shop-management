@@ -22,13 +22,11 @@ pipeline {
             steps{
                 sh 'docker build -t daonq141/shop-management:latest .'
             }
-            failFast = true
         }
         stage('Login to Dockerhub'){
             steps{
                 sh('echo $DOCKERHUB_LOGIN_PSW | docker login -u $DOCKERHUB_LOGIN_USR --password-stdin')
             }
-            failFast = true
         }
         stage('Pushing image') {
             steps {
