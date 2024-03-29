@@ -54,7 +54,7 @@ pipeline {
                     ANSIBLE_HOST_KEY_CHECKING = 'False'
                 }
             stages{
-                stage{
+                stage('deploy...'){
                     steps {
                         withCredentials([file(credentialsId: 'ansible_key', variable: 'ansible_key')]) {
                             sh 'ls -la'
