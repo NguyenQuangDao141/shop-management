@@ -44,7 +44,6 @@ pipeline {
                 id 'productionDeploy'
                 message 'Proceed with production deployment?'
                 ok 'Deploy'
-                cancel 'Reject'
             }
             steps {
                 withCredentials([file(credentialsId: 'ansible_key', variable: 'ansible_key')]) {
