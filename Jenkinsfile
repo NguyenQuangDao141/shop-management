@@ -1,16 +1,13 @@
 pipeline {
-
     agent none
-
     tools {
         maven 'daonq-maven'
     }
     environment {
-        MYSQL_USER_LOGIN = credentials('mysql-user-login')
         DOCKERHUB_LOGIN = credentials('dockerhub')
     }
     stages {
-        stage('Deploy Application to DEV'){
+        stage('Start'){
             agent any
             stages{
                 stage('Build With Maven') {
@@ -35,7 +32,7 @@ pipeline {
                         sh 'docker push daonq141/shop-management:latest'
                     }
                 }
-                stage('Deploy') {
+                stage('Deploy Application to DEV') {
                     steps {
                         echo 'Deploying and cleaning'
                         sh ' docker image pull daonq141/shop-management'
