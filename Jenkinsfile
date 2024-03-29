@@ -17,7 +17,6 @@ pipeline {
                 sh 'java -version'
                 sh 'mvn clean package -Dmaven.test.failure.ignore=true'
             }
-            failFast = true
         }
         stage('Build Docker Image '){
             steps{
@@ -35,7 +34,6 @@ pipeline {
             steps {
                 sh 'docker push daonq141/shop-management:latest'
             }
-            failFast = true
         }
 
 
@@ -48,7 +46,6 @@ pipeline {
                 sh ' y |  docker container prune '
                 sh ' docker container run -d --rm --name shop-management -p 8081:8080 --network dev daonq141/shop-management'
             }
-            failFast = true
         }
 
         stage('Deploy Application to PRODUCT'){
@@ -67,7 +64,6 @@ pipeline {
                     sh 'chmod 400 ansible_key '
                     sh 'ansible-playbook -i hosts --private-key ansible_key playbook.yml'
             }
-            failFast = true
         }
 
     }
