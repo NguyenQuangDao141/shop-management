@@ -50,6 +50,9 @@ pipeline {
                     image 'khaliddinh/ansible'
                 }
             }
+            environment {
+                    ANSIBLE_HOST_KEY_CHECKING = 'False'
+                }
             steps {
                 withCredentials([file(credentialsId: 'ansible_key', variable: 'ansible_key')]) {
                     sh 'ls -la'
