@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent {label 'agent1'}
     tools {
         maven 'daonq-maven'
     }
