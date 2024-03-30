@@ -125,7 +125,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <ul class="nav navbar-nav menu__list">
                             <li class="active menu__item menu__item--current"><a class="menu__link" href="/">Home
                                 <span class="sr-only">(current)</span></a></li>
-                            <li class=" menu__item"><a class="menu__link" href="about.html">About</a></li>
+                            <li class=" menu__item"><a class="menu__link" href="${pageContext.request.contextPath}/admin/get/aboutPage">About</a></li>
                             <li class="dropdown menu__item">
                                 <a href="#" class="dropdown-toggle menu__link" data-toggle="dropdown" role="button"
                                    aria-haspopup="true" aria-expanded="false">Men's wear <span class="caret"></span></a>
@@ -759,7 +759,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <li><a href="/">Home</a></li>
                         <li><a href="mens.html">Men's Wear</a></li>
                         <li><a href="womens.html">Women's wear</a></li>
-                        <li><a href="about.html">About</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/get/aboutPage">About</a></li>
                         <li><a href="typography.html">Short Codes</a></li>
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
