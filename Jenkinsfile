@@ -48,11 +48,11 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'ansible_key', variable: 'ansible_key')]) {
                     echo 'Deploying and cleaning'
-                    sh ' docker image pull daonq141/shop-management'
-                    sh ' docker container stop shop-management || echo "this container does not exist" '
-                    sh ' docker network create dev || echo "this network exists"'
-                    sh ' y |  docker container prune '
-                    sh ' docker container run -d --rm --name shop-management -p 8081:8080 --network dev daonq141/shop-management'
+                    sh 'docker container stop shop-management || echo "this container does not exist" '
+                    sh 'docker network create dev || echo "this network exists"'
+                    sh 'docker system prune -a'
+                    sh 'docker image pull daonq141/shop-management'
+                    sh 'docker container run -d --rm --name shop-management -p 8080:8080 --network dev daonq141/shop-management'
                 }
             }
         }
