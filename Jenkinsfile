@@ -47,6 +47,7 @@ pipeline {
             }
             steps {
                 withCredentials([file(credentialsId: 'ec2_private_key', variable: 'ec2_private_key')]) {
+                    echo 'ec2_private_key : $ec2_private_key'
                     sh '''
                     ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker image pull daonq141/shop-management
                     ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker container stop shop-management || echo "this container does not exist"
