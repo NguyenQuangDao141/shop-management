@@ -5,7 +5,6 @@ pipeline {
     }
     environment {
         DOCKERHUB_LOGIN = credentials('dockerhub')
-        EC2_SERVER = credentials('ec2_server')
     }
     stages {
         stage('Build With Maven') {
@@ -49,12 +48,12 @@ pipeline {
             steps {
                 withCredentials([file(credentialsId: 'ec2_private_key', variable: 'ec2_private_key')]) {
                     sh '''
-                    ssh -i $ec2_private_key $EC2_SERVER sudo docker image pull daonq141/shop-management
-                    ssh -i $ec2_private_key $EC2_SERVER sudo docker container stop shop-management || echo "this container does not exist"
-                    ssh -i $ec2_private_key $EC2_SERVER sudo docker network create dev || echo "this network exists"
-                    ssh -i $ec2_private_key $EC2_SERVER y |  docker container prune
-                    ssh -i $ec2_private_key $EC2_SERVER sudo docker container run -d --rm --name shop-management -p 8080:8080 --network dev daonq141/shop-management
-                    ssh -i $ec2_private_key $EC2_SERVER sudo docker ps
+                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker image pull daonq141/shop-management
+                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker container stop shop-management || echo "this container does not exist"
+                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker network create dev || echo "this network exists"
+                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com y |  docker container prune
+                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker container run -d --rm --name shop-management -p 8080:8080 --network dev daonq141/shop-management
+                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker ps
                     '''
 
                 }
