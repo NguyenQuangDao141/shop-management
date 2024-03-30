@@ -46,7 +46,7 @@ pipeline {
                 ok 'Deploy'
             }
             steps {
-                withCredentials([file(credentialsId: 'ec2_private_key', variable: 'ec2_private_key')]) {
+                withCredentials([sshUserPrivateKey(credentialsId: 'ec2_private_key', keyFileVariable: 'ec2_private_key')]) {
                     echo 'ec2_private_key : $ec2_private_key'
                     sh '''
                     ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker image pull daonq141/shop-management
