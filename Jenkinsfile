@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
     tools {
         maven 'daonq-maven'
     }
@@ -8,7 +8,6 @@ pipeline {
     }
     stages {
         stage('Build With Maven') {
-            agent any
             steps {
                 sh 'mvn --version'
                 sh 'java -version'
@@ -16,25 +15,21 @@ pipeline {
             }
         }
         stage('Build Docker Image '){
-            agent any
             steps{
                 sh 'docker build -t daonq141/shop-management:latest .'
             }
         }
         stage('Login to Dockerhub'){
-            agent any
             steps{
                 sh('echo $DOCKERHUB_LOGIN_PSW | docker login -u $DOCKERHUB_LOGIN_USR --password-stdin')
             }
         }
         stage('Pushing image') {
-            agent any
             steps {
                 sh 'docker push daonq141/shop-management:latest'
             }
         }
         stage('Deploy Application to DEV') {
-            agent any
             steps {
                 echo 'Deploying and cleaning'
                 sh ' docker image pull daonq141/shop-management'
