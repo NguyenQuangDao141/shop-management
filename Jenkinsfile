@@ -8,7 +8,7 @@ pipeline {
     }
     stages {
         stage('Build With Maven') {
-            agent {label 'master_node'}
+            agent any
             steps {
                 sh 'mvn --version'
                 sh 'java -version'
@@ -16,25 +16,25 @@ pipeline {
             }
         }
         stage('Build Docker Image '){
-            agent {label 'master_node'}
+            agent any
             steps{
                 sh 'docker build -t daonq141/shop-management:latest .'
             }
         }
         stage('Login to Dockerhub'){
-            agent {label 'master_node'}
+            agent any
             steps{
                 sh('echo $DOCKERHUB_LOGIN_PSW | docker login -u $DOCKERHUB_LOGIN_USR --password-stdin')
             }
         }
         stage('Pushing image') {
-            agent {label 'master_node'}
+            agent any
             steps {
                 sh 'docker push daonq141/shop-management:latest'
             }
         }
         stage('Deploy Application to DEV') {
-            agent {label 'master_node'}
+            agent any
             steps {
                 echo 'Deploying and cleaning'
                 sh ' docker image pull daonq141/shop-management'
@@ -57,9 +57,9 @@ pipeline {
                             image 'khaliddinh/ansible'
                             }
                         }
-                        environment {
-                            ANSIBLE_HOST_KEY_CHECKING = 'False'
-                        }
+                    environment {
+                        ANSIBLE_HOST_KEY_CHECKING = 'False'
+                    }
                     steps {
                         withCredentials([file(credentialsId: 'ec2_private_key', variable: 'ec2_private_key')]) {
                             sh 'ls -la'
