@@ -53,7 +53,11 @@ pipeline {
             stages {
                 stage('Deploy Application to Production') {
                     steps {
-                        agent{ docker {image 'khaliddinh/ansible'}}
+                        agent{
+                            docker {
+                                image 'khaliddinh/ansible'
+                                }
+                            }
                         environment {
                             ANSIBLE_HOST_KEY_CHECKING = 'False'
                         }
