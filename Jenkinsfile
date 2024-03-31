@@ -50,19 +50,13 @@ pipeline {
                 message 'Proceed with production deployment?'
                 ok 'Deploy'
             }
-            agent{
-                    docker {
-                        image 'khaliddinh/ansible'
-                    }
-            }
-            environment {
-                ANSIBLE_HOST_KEY_CHECKING = 'False'
-            }
             stages {
-
                 stage('Deploy Application to Production') {
-
                     steps {
+                        agent{ docker {image 'khaliddinh/ansible'}}
+                        environment {
+                            ANSIBLE_HOST_KEY_CHECKING = 'False'
+                        }
                         withCredentials([file(credentialsId: 'ec2_private_key', variable: 'ec2_private_key')]) {
                             sh 'ls -la'
                             sh "cp /$ec2_private_key ec2_private_key"
