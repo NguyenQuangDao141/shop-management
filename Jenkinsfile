@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
     tools {
         maven 'daonq-maven'
     }
@@ -8,6 +8,7 @@ pipeline {
     }
     stages {
         stage('Build With Maven') {
+            agent {label 'master_node'}
             steps {
                 sh 'mvn --version'
                 sh 'java -version'
@@ -15,21 +16,25 @@ pipeline {
             }
         }
         stage('Build Docker Image '){
+            agent {label 'master_node'}
             steps{
                 sh 'docker build -t daonq141/shop-management:latest .'
             }
         }
         stage('Login to Dockerhub'){
+            agent {label 'master_node'}
             steps{
                 sh('echo $DOCKERHUB_LOGIN_PSW | docker login -u $DOCKERHUB_LOGIN_USR --password-stdin')
             }
         }
         stage('Pushing image') {
+            agent {label 'master_node'}
             steps {
                 sh 'docker push daonq141/shop-management:latest'
             }
         }
         stage('Deploy Application to DEV') {
+            agent {label 'master_node'}
             steps {
                 echo 'Deploying and cleaning'
                 sh ' docker image pull daonq141/shop-management'
@@ -39,26 +44,38 @@ pipeline {
                 sh ' docker container run -d --rm --name shop-management -p 8081:8080 --network dev daonq141/shop-management'
             }
         }
-        stage('Deploy Application to PRODUCT'){
+        stage('Prepare for deploying to PRODUCTION'){
             input {
                 id 'productionDeploy'
                 message 'Proceed with production deployment?'
                 ok 'Deploy'
             }
-            steps {
-                withCredentials([sshUserPrivateKey(credentialsId: 'ec2_private_key', keyFileVariable: 'ec2_private_key')]) {
-                    echo 'ec2_private_key : $ec2_private_key'
-                    sh '''
-                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker image pull daonq141/shop-management
-                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker container stop shop-management || echo "this container does not exist"
-                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker network create dev || echo "this network exists"
-                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com y |  docker container prune
-                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker container run -d --rm --name shop-management -p 8080:8080 --network dev daonq141/shop-management
-                    ssh -i $ec2_private_key ubuntu@ec2-54-254-25-176.ap-southeast-1.compute.amazonaws.com sudo docker ps
-                    '''
+            agent{
+                    docker {
+                        image 'khaliddinh/ansible'
+                    }
+            }
+            environment {
+                ANSIBLE_HOST_KEY_CHECKING = 'False'
+            }
+            stages {
 
+                stage('Deploy Application to Production') {
+
+                    steps {
+                        withCredentials([file(credentialsId: 'ec2_private_key', variable: 'ec2_private_key')]) {
+                            sh 'ls -la'
+                            sh "cp /$ec2_private_key ec2_private_key"
+                            sh 'cat ec2_private_key'
+                            sh 'ansible --version'
+                            sh 'ls -la'
+                            sh 'chmod 400 ec2_private_key '
+                            sh 'ansible-playbook -i hosts --private-key ec2_private_key playbook.yml'
+                        }
+                    }
                 }
             }
+
         }
     }
     post {
