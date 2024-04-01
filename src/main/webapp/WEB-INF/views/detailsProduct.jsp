@@ -483,8 +483,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <div class="flexslider">
 
                     <ul class="slides">
-                        <li data-thumb="/static/images/d2.jpg">
-                            <div class="thumb-image"><img src="/static/images/d2.jpg" data-imagezoom="true"
+                        <li data-thumb="/static/images/${product.image}">
+                            <div class="thumb-image"><img src="/static/images/${product.image}" data-imagezoom="true"
                                                           class="img-responsive"></div>
                         </li>
                         <li data-thumb="/static/images/d1.jpg">

@@ -24,10 +24,7 @@ public class AdminController {
         httpSession.setAttribute("id", httpServletRequest.getSession().getId());
         return "admin/home";
     }
-    @GetMapping("/get/aboutPage")
-    public String getAboutPage(HttpServletRequest httpServletRequest){
-        return "about";
-    }
+
 
     @GetMapping("/get/chatBox")
     public String getChatApp(HttpServletRequest httpServletRequest) {

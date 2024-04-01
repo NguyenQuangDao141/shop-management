@@ -627,8 +627,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <div class="col-md-3 product-men">
                     <div class="men-pro-item simpleCart_shelfItem">
                         <div class="men-thumb-item">
-                            <img src="/static/images/m1.jpg" alt="" class="pro-image-front">
-                            <img src="/static/images/m1.jpg" alt="" class="pro-image-back">
+                            <img src="/static/images/${menProd.image}" alt="" class="pro-image-front">
+                            <img src="/static/images/${menProd.image}" alt="" class="pro-image-back">
                             <div class="men-cart-pro">
                                 <div class="inner-men-cart-pro">
                                     <a href="/show/product?id=${menProd.id}" class="link-product-add-cart">Quick
@@ -641,8 +641,8 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                         <div class="item-info-product ">
                             <h4><a href="/show/product?id=${menProd.id}">${menProd.name}</a></h4>
                             <div class="info-product-price">
-                                <span class="item_price">$45.99</span>
-                                <del>$69.71</del>
+                                <span class="item_price">${menProd.price}</span>
+                                <del>${menProd.price*1.3}</del>
                             </div>
                             <div class="snipcart-details top_brand_home_details item_add single-item hvr-outline-out button2">
                                 <input type="submit" data-toggle="modal" data-target="#myModal" name="submit" value="Add to cart" class="button"/>

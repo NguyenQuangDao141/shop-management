@@ -110,6 +110,10 @@ public class WebController {
         setUpSignInAndSignUp(modelMap, httpSession);
         return "home";
     }
+    @GetMapping("/get/aboutPage")
+    public String getAboutPage(HttpServletRequest httpServletRequest){
+        return "about";
+    }
 
     @GetMapping("/showCart")
     public String showCart(ModelMap modelMap, HttpSession session) {
