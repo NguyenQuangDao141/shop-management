@@ -24,7 +24,7 @@ public class UploadService {
         int year = localDate.getYear();//2021
         int month = localDate.getMonthValue();//06
         String subFolder = month+"_"+year+"/";//06_2021/
-        String fullUploadDir = UPLOAD_FOLDER+"/"+subFolder;
+        String fullUploadDir = UPLOAD_FOLDER+"/"+subFolder+"/";
         File checkDir = new File(fullUploadDir);
         if (!checkDir.exists() || checkDir.isFile()) {
             //tạo mới folder
